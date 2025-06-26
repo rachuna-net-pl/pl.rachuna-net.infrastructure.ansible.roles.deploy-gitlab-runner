@@ -1,0 +1,66 @@
+---
+driver:
+    name: molecule-proxmox
+    options:
+        debug: true
+        # api_host:                       # from TEST_PROXMOX_HOST
+        # api_user:                       # from TEST_PROXMOX_USER
+        # api_password:                   # from TEST_PROXMOX_PASSWORD
+        # node:                           # from TEST_PROXMOX_NODE
+        ssh_user: pkr_admin
+        ssh_port: 22
+        ssh_identity_file: ~/.ssh/id_rsa
+        timeout: 3600
+
+platforms:
+    - name: molecule-ubuntu
+      template_name: ubuntu-24.10
+      full: false
+      pool: molecule
+      net:
+          net0: 'virtio,bridge=vmbr0,tag=10'
+      ipconfig:
+          ipconfig0: "ip=dhcp"
+      core: 1
+      cpu: 1
+      memory: 2048
+
+    - name: molecule-alpine
+      template_name: alpine-3.21.2
+      full: false
+      pool: molecule
+      net:
+          net0: 'virtio,bridge=vmbr0,tag=10'
+      ipconfig:
+          ipconfig0: "ip=dhcp"
+      core: 1
+      cpu: 1
+      memory: 2048
+
+    - name: molecule-alma
+      template_name: AlmaLinux-9.6
+      full: false
+      pool: molecule
+      net:
+          net0: 'virtio,bridge=vmbr0,tag=10'
+      ipconfig:
+          ipconfig0: "ip=dhcp"
+      core: 1
+      cpu: 1
+      memory: 2048
+
+provisioner:
+    name: ansible
+    env:
+        ANSIBLE_ROLES_PATH: ../../../../roles/
+        ANSIBLE_HOST_KEY_CHECKING: false
+        ANSIBLE_FORCE_COLOR: true
+    config_options:
+        ssh-connection:
+            host_key_checking: false
+
+verifier:
+    name: testinfra
+    options:
+        v: true
+        s: true

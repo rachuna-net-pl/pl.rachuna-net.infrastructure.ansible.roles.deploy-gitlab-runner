@@ -1,0 +1,6 @@
+---
+- name: "🔧 Restart gitlab-runner"
+  service:
+    name: gitlab-runner
+    enabled: true
+    state: restarted
